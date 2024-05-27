@@ -111,3 +111,6 @@ for filial in filiais:
 
     stock = calculate_stock(movimentacao_collection)  # Calcular estoque
     print(f"Estoque calculado para {filial}: {stock}")
+
+
+# TESTE GIGIOLAS COMIITASDASDHJ
