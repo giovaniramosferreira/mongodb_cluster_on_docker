@@ -39,25 +39,26 @@ rs.initiate(
          { _id: 2, host : "m-c03:27017" }
       ]
    }
+)
 
 
 #Criando os Shards
 
-$ docker run --name mongo-sd001a --net supermercados-gigios -d mongosh mongod --port 27018 --shardsvr --replSet shard001
-$ docker run --name mongo-sd001b --net supermercados-gigios -d mongosh mongod --port 27018 --shardsvr --replSet shard001
+$ docker run --name mongo-sd001a --net supermercados-gigios -d mongo mongod --port 27018 --shardsvr --replSet shard001
+$ docker run --name mongo-sd001b --net supermercados-gigios -d mongo mongod --port 27018 --shardsvr --replSet shard001
 
 
-$ docker run --name mongo-sd002a --net supermercados-gigios -d mongosh mongod --port 27019 --shardsvr --replSet shard002
-$ docker run --name mongo-sd002b --net supermercados-gigios -d mongosh mongod --port 27019 --shardsvr --replSet shard002
+$ docker run --name mongo-sd002a --net supermercados-gigios -d mongo mongod --port 27019 --shardsvr --replSet shard002
+$ docker run --name mongo-sd002b --net supermercados-gigios -d mongo mongod --port 27019 --shardsvr --replSet shard002
 
 
-$ docker run --name mongo-sd003a --net supermercados-gigios -d mongosh mongod --port 27020 --shardsvr --replSet shard003
-$ docker run --name mongo-sd003b --net supermercados-gigios -d mongosh mongod --port 27020 --shardsvr --replSet shard003
+$ docker run --name mongo-sd003a --net supermercados-gigios -d mongo mongod --port 27020 --shardsvr --replSet shard003
+$ docker run --name mongo-sd003b --net supermercados-gigios -d mongo mongod --port 27020 --shardsvr --replSet shard003
 
 
 #configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
 
-$ docker exec -it mongo-sd001a mongo --port 27018
+$ docker exec -it mongo-sd001a mongosh --port 27018
 
 rs.initiate(
    {
@@ -70,7 +71,10 @@ rs.initiate(
    }
 )
 
-$ docker exec -it mongo-sd002a mongo --port 27019
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/666e1536-28ec-4014-97dd-706a03921762)
+
+
+$ docker exec -it mongo-sd002a mongosh --port 27019
 
 rs.initiate(
    {
@@ -83,7 +87,10 @@ rs.initiate(
    }
 )
 
-$ docker exec -it mongo-sd003a mongo --port 27020
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/5120ef50-6d91-4222-93b7-bbfe0e8111b9)
+
+
+$ docker exec -it mongo-sd003a mongosh --port 27020
 
 rs.initiate(
    {
@@ -96,16 +103,22 @@ rs.initiate(
    }
 )
 
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/056387b9-fca9-448b-8546-960fd18c298f)
 
 Criando o Roteador
 
-$ docker run -p 27017:27017 --name mongo-rt --net supermercados-gigios -d mongosh mongos --port 27017 --configdb configserver/m-c01:27017,m-c02:27017,m-c03:27017 --bind_ip_all
+$ docker run -p 27017:27017 --name mongo-rt --net supermercados-gigios -d mongo mongos --port 27017 --configdb configserver/m-c01:27017,m-c02:27017,m-c03:27017 --bind_ip_all
 
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/4f82339b-44e8-4551-bb47-bf5fc67a649c)
 
 
 checando se tudo está ok
 
+
+
 $ docker ps
+
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/ce12e52c-d53d-4ac6-9748-4a77135d1af5)
 
 
 configurando o roteador - execute cada linha separadamente.
@@ -128,3 +141,6 @@ $ sh.addShard("shard003/mongo-sd003b:27020")
 para conferir
 
 sh.status()
+
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/2678ecdf-73ed-457c-925a-ef37e9aad5bf)
+
