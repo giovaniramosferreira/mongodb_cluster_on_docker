@@ -8,26 +8,26 @@ HOST = 'localhost'    # Altere para o endereço do roteador MongoDB, se necessá
 PORT = 27017          # Porta padrão do MongoDB
 
 # Lista de filiais
-filiais = ['filial_1', 
-           'filial_2', 
-           'filial_3', 
-           'filial_4',
-           'filial_5', 
-           'filial_6', 
-           'filial_7', 
-           'filial_8',
-           'filial_9', 
-           'filial_10', 
-           'filial_11', 
-           'filial_12',
-           'filial_13', 
-           'filial_14', 
-           'filial_15', 
-           'filial_16',
-           'filial_17', 
-           'filial_18', 
-           'filial_19', 
-           'filial_20'
+filiais = ['filial_001', 
+           'filial_002', 
+           'filial_003', 
+           'filial_004',
+           'filial_005', 
+           'filial_006', 
+           'filial_007', 
+           'filial_008',
+           'filial_009', 
+           'filial_010', 
+           'filial_011', 
+           'filial_012',
+           'filial_013', 
+           'filial_014', 
+           'filial_015', 
+           'filial_016',
+           'filial_017', 
+           'filial_018', 
+           'filial_019', 
+           'filial_020'
            ]
 
 # Função para conectar ao MongoDB
