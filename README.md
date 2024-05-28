@@ -20,13 +20,13 @@ $ docker network create supermercados-gigios
 
 #Criando os ConfigServers
 
-$ docker run --name m-c01 --net supermercados-gigios -d mongosh mongod --configsvr --replSet configserver --port 27017
-$ docker run --name m-c02 --net supermercados-gigios -d mongosh mongod --configsvr --replSet configserver --port 27017
-$ docker run --name m-c03 --net supermercados-gigios -d mongosh mongod --configsvr --replSet configserver --port 27017
+$ docker run --name m-c01 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
+$ docker run --name m-c02 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
+$ docker run --name m-c03 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
 
 #Configurando os ConfigServers
 
-$ docker exec -it mongo-config01 mongosh
+$ docker exec -it m-c01 mongosh
 
 rs.initiate(
    {
@@ -34,9 +34,9 @@ rs.initiate(
       configsvr: true,
       version: 1,
       members: [
-         { _id: 0, host : "mongo-config01:27017" },
-         { _id: 1, host : "mongo-config02:27017" },
-         { _id: 2, host : "mongo-config03:27017" }
+         { _id: 0, host : "m-c01:27017" },
+         { _id: 1, host : "m-c02:27017" },
+         { _id: 2, host : "m-c03:27017" }
       ]
    }
 
