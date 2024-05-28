@@ -144,3 +144,11 @@ sh.status()
 
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/2678ecdf-73ed-457c-925a-ef37e9aad5bf)
 
+
+Após a criação do cluster, podemo utilizar o MongoCompass para acessar o ambiente. é interessante observar as coleções do database Config:
+
+nossos Shards Criados
+
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/b1007c5e-eb40-40c9-8a2d-ff0626cd6ec4)
+
+
