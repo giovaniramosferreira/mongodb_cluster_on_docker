@@ -8,7 +8,27 @@ HOST = 'localhost'    # Altere para o endereço do roteador MongoDB, se necessá
 PORT = 27017          # Porta padrão do MongoDB
 
 # Lista de filiais
-filiais = ['filial_25'] #, 'filial_2', 'filial_3', 'filial_4']
+filiais = ['filial_1', 
+           'filial_2', 
+           'filial_3', 
+           'filial_4',
+           'filial_5', 
+           'filial_6', 
+           'filial_7', 
+           'filial_8',
+           'filial_9', 
+           'filial_10', 
+           'filial_11', 
+           'filial_12',
+           'filial_13', 
+           'filial_14', 
+           'filial_15', 
+           'filial_16',
+           'filial_17', 
+           'filial_18', 
+           'filial_19', 
+           'filial_20'
+           ]
 
 # Função para conectar ao MongoDB
 def connect_to_mongodb(host, port):
@@ -77,7 +97,18 @@ def insert_order_documents(movimentacao_collection, estoque_collection):
         'item_id': item_id,  
         'data_operacao': datetime.now(),  
         'quantidade': quantidade,  
-        'tipo_operacao': tipo_operacao
+        'tipo_operacao': tipo_operacao,
+        'preco_unitario': fake.random_int(min=1, max=100),  # Preço unitário do item
+        'valor_total': quantidade * fake.random_int(min=1, max=100),  # Valor total da operação
+        'fornecedor': fake.company(),  # Nome do fornecedor
+        'codigo_fornecedor': fake.random_int(min=1, max=1000),  # Código do fornecedor
+        'codigo_categoria': fake.random_int(min=1, max=10),  # Código da categoria do item
+        'nome_categoria': fake.word(),  # Nome da categoria do item
+        'marca': fake.company_suffix(),  # Marca do item
+        'codigo_local': fake.random_int(min=1, max=100),  # Código do local de armazenamento
+        'nome_local': fake.word(),  # Nome do local de armazenamento
+        'data_validade': fake.date_time_between(start_date='+1d', end_date='+2y'),  # Data de validade do item
+        'lote': fake.random_int(min=1000, max=9999)  # Número do lote do item
     }
     movimentacao_collection.insert_one(order)
     print("Documento de pedido inserido:", order_id)
@@ -98,7 +129,7 @@ def insert_order_documents(movimentacao_collection, estoque_collection):
 # Conectar ao MongoDB
 client = connect_to_mongodb(HOST, PORT)
 
-numero_operacoes = 10  # Número de documentos a serem inseridos por filial
+numero_operacoes = 5  # Número de documentos a serem inseridos por filial
 
 # Loop para processar cada filial
 for filial in filiais: 
@@ -111,6 +142,3 @@ for filial in filiais:
 
     stock = calculate_stock(movimentacao_collection)  # Calcular estoque
     print(f"Estoque calculado para {filial}: {stock}")
-
-
-# TESTE GIGIOLAS COMIITASDASDHJ
