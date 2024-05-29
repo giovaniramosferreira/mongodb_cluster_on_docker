@@ -17,17 +17,7 @@ filiais = ['filial_001',
            'filial_007', 
            'filial_008',
            'filial_009', 
-           'filial_010', 
-           'filial_011', 
-           'filial_012',
-           'filial_013', 
-           'filial_014', 
-           'filial_015', 
-           'filial_016',
-           'filial_017', 
-           'filial_018', 
-           'filial_019', 
-           'filial_020'
+           'filial_010'
            ]
 
 # Função para conectar ao MongoDB
@@ -129,7 +119,7 @@ def insert_order_documents(movimentacao_collection, estoque_collection):
 # Conectar ao MongoDB
 client = connect_to_mongodb(HOST, PORT)
 
-numero_operacoes = 5  # Número de documentos a serem inseridos por filial
+numero_operacoes = 500  # Número de documentos a serem inseridos por filial
 
 # Loop para processar cada filial
 for filial in filiais: 
