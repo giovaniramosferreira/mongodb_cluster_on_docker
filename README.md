@@ -15,7 +15,7 @@ Baseando-se no artigo [artigo](https://gustavo-leitao.medium.com/criando-um-clus
 
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/3b88fd7c-d414-4915-bc44-7b3492e06050)
 
-
+No caso do nosso cliente já existem 4 filiais
 
 _______
 
