@@ -15,8 +15,9 @@ Todos os comandos abaixo devem ser executados diretamente no prompt do comando d
 
 #Criando a Rede
 
+```
 $ docker network create supermercados-gigios
-
+```
 
 #Criando os ConfigServers
 
