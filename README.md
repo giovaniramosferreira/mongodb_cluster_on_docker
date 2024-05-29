@@ -2,9 +2,7 @@
 
 Nesse projeto vou exemplicar um projeto de implantação de um banco de dados documental escalável e distribuido, com o objetivo de aplicar os conhecimentos adquiridos nas aulas de Banco de Dados NoSQL do curso de Engenharia de Dados da PUC Minas, ministrado pelo (excelente) professor [Anderson Theobaldo](https://www.linkedin.com/in/atheobaldo/)
 
-## 🚀 Começando
-
-Criando um cluster de MongoDB utilizando Docker para estabelecer um ambiente distribuído, escalável e tolerante a falhas.
+# 🚀 Começando
 
 ## [Cenário]
 
