@@ -13,6 +13,10 @@ Cada filial possui um grande volume de produtos em seu estoque. O sistema precis
 ## [Arquitetura da Solução]
 Baseando-se no artigo [artigo](https://gustavo-leitao.medium.com/criando-um-cluster-mongodb-com-replicaset-e-sharding-com-docker-9cb19d456b56) de Gustavo Leitão, vamos criar um cluster de MongoDB em Docker. Para isso, utilizaremos três tipos de serviços: Roteador, Servidor de Configuração e Shards, que serão responsáveis pelas partições.
 
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/3b88fd7c-d414-4915-bc44-7b3492e06050)
+
+
+
 _______
 
 Todos os comandos abaixo devem ser executados diretamente no prompt do comando do seu computador. no meu caso, estou usando Windows
