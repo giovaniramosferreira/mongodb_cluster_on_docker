@@ -1,19 +1,21 @@
 # mongodb_cluster_on_docker
 
-Criando um cluster de MongoDB utilizando Docker para criar um ambiente distribuido, escalável e tolerante a particionamento.
+Criando um cluster de MongoDB utilizando Docker para estabelecer um ambiente distribuído, escalável e tolerante a falhas.
 
-Utilizando como referencia o arquigo de gustavo leitão (https://gustavo-leitao.medium.com/criando-um-cluster-mongodb-com-replicaset-e-sharding-com-docker-9cb19d456b56) vamos criar um cluster ligeiramente diferente, prevendo a escalabilidade pois o Supermercado tem planos de expanção para novas cidades, com crescente numero de filiais.
+## [Cenário]
 
+Vamos criar um cluster para atender às necessidades de uma cadeia de supermercados, com foco em escalabilidade e eficiência. Nosso cliente planeja expandir para novas cidades em breve, aumentando rapidamente o número de filiais.
 
-para tal, utilzaremos tres tipos de serviços, Roteador, Servidor de Configuração e os Shards que ficarão responsáveis pelas partições.
+Cada filial possui um grande volume de produtos em seu estoque. O sistema precisa ser capaz de lidar com milhões de registros de produtos, garantindo que as consultas de estoque e as atualizações de inventário sejam rápidas e eficientes. A escalabilidade do sistema é essencial, pois nosso cliente tem planos de expansão e vai abrir novas filiais em um futuro breve.
 
-(DESENHO)
+## [Arquitetura da Solução]
+Baseando-se no artigo [artigo](https://gustavo-leitao.medium.com/criando-um-cluster-mongodb-com-replicaset-e-sharding-com-docker-9cb19d456b56) de Gustavo Leitão, vamos criar um cluster de MongoDB em Docker. Para isso, utilizaremos três tipos de serviços: Roteador, Servidor de Configuração e Shards, que serão responsáveis pelas partições.
 
-
+_______
 
 Todos os comandos abaixo devem ser executados diretamente no prompt do comando do seu computador. no meu caso, estou usando Windows
 
-# Criando a Rede
+## Criando a Rede
 
 ```
 $ docker network create supermercados-gigios
@@ -50,7 +52,7 @@ rs.initiate(
 )
 ```
 
-# Criando os Shards
+## Criando os Shards
 
 ```
 $ docker run --name mongo-sd001a --net supermercados-gigios -d mongo mongod --port 27018 --shardsvr --replSet shard001
@@ -71,7 +73,7 @@ $ docker run --name mongo-sd003a --net supermercados-gigios -d mongo mongod --po
 $ docker run --name mongo-sd003b --net supermercados-gigios -d mongo mongod --port 27020 --shardsvr --replSet shard003
 ```
 
-# configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
+## configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
 
 ```
 $ docker exec -it mongo-sd001a mongosh --port 27018
@@ -125,7 +127,7 @@ rs.initiate(
 ```
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/056387b9-fca9-448b-8546-960fd18c298f)
 
-# Criando o Roteador
+## Criando o Roteador
 
 ```
 $ docker run -p 27017:27017 --name mongo-rt --net supermercados-gigios -d mongo mongos --port 27017 --configdb configserver/m-c01:27017,m-c02:27017,m-c03:27017 --bind_ip_all
@@ -142,7 +144,7 @@ $ docker ps
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/ce12e52c-d53d-4ac6-9748-4a77135d1af5)
 
 
-# Configurando o roteador - execute cada linha separadamente.
+## Configurando o roteador - execute cada linha separadamente.
 
 ```
 $ docker exec -it mongo-rt mongosh
