@@ -20,15 +20,17 @@ No caso do nosso cliente já existem 4 filiais
 
 _______
 
+## [Construindo a Solução]
+
 Todos os comandos abaixo devem ser executados diretamente no prompt do comando do seu computador. no meu caso, estou usando Windows
 
-## Criando a Rede
+## 🔧 Criando a Rede
 
 ```
 $ docker network create supermercados-gigios
 ```
 
-## Criando os ConfigServers
+## 🔧 Criando os ConfigServers
 ```
 $ docker run --name m-c01 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
 ```
@@ -41,7 +43,7 @@ $ docker run --name m-c03 --net supermercados-gigios -d mongo mongod --configsvr
 ```
 $ docker run --name m-c04 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
 ```
-## Configurando os ConfigServers
+## 🔧 Configurando os ConfigServers
 
 ```
 $ docker exec -it m-c01 mongosh
@@ -63,7 +65,7 @@ rs.initiate(
 )
 ```
 
-## Criando os Shards
+## 🔧 Criando os Shards
 
 shard001
 
@@ -91,7 +93,7 @@ $ docker run --name mongo-sd004b --net supermercados-gigios -d mongo mongod --po
 $ docker run --name mongo-sd004c --net supermercados-gigios -d mongo mongod --port 27021 --shardsvr --replSet shard004
 ```
 
-## configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
+## 🔧 Configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
 
 ```
 $ docker exec -it mongo-sd001a mongosh --port 27018
@@ -104,6 +106,7 @@ rs.initiate(
       members: [
          { _id: 0, host : "mongo-sd001a:27018" },
          { _id: 1, host : "mongo-sd001b:27018" },
+         { _id: 3, host : "mongo-sd001c:27018" },
       ]
    }
 )
@@ -122,6 +125,7 @@ rs.initiate(
       members: [
          { _id: 0, host : "mongo-sd002a:27019" },
          { _id: 1, host : "mongo-sd002b:27019" },
+         { _id: 2, host : "mongo-sd002c:27019" },
       ]
    }
 )
@@ -139,13 +143,31 @@ rs.initiate(
       members: [
          { _id: 0, host : "mongo-sd003a:27020" },
          { _id: 1, host : "mongo-sd003b:27020" },
+         { _id: 2, host : "mongo-sd003c:27020" },
       ]
    }
 )
 ```
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/056387b9-fca9-448b-8546-960fd18c298f)
 
-## Criando o Roteador
+```
+$ docker exec -it mongo-sd004a mongosh --port 27021
+```
+```
+rs.initiate(
+   {
+      _id: "shard004",
+      version: 1,
+      members: [
+         { _id: 0, host : "mongo-sd004a:27021" },
+         { _id: 1, host : "mongo-sd004b:27021" },
+         { _id: 2, host : "mongo-sd004c:27021" },
+      ]
+   }
+)
+```
+
+## 🔧 Criando o Roteador
 
 ```
 $ docker run -p 27017:27017 --name mongo-rt --net supermercados-gigios -d mongo mongos --port 27017 --configdb configserver/m-c01:27017,m-c02:27017,m-c03:27017 --bind_ip_all
@@ -162,28 +184,30 @@ $ docker ps
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/ce12e52c-d53d-4ac6-9748-4a77135d1af5)
 
 
-## Configurando o roteador - execute cada linha separadamente.
+## 🔧 Configurando o roteador - execute cada linha separadamente.
 
 ```
 $ docker exec -it mongo-rt mongosh
 ```
 ```
 $ sh.addShard("shard001/mongo-sd001a:27018")
-```
-```
-$ sh.addShard("shard001/mongo-sd001b:27018") 
+$ sh.addShard("shard001/mongo-sd001b:27018")
+$ sh.addShard("shard001/mongo-sd001c:27018")
 ```
 ```
 $ sh.addShard("shard002/mongo-sd002a:27019")
-```
-```
-$ sh.addShard("shard002/mongo-sd002b:27019") 
+$ sh.addShard("shard002/mongo-sd002b:27019")
+$ sh.addShard("shard002/mongo-sd002c:27019")
 ```
 ```
 $ sh.addShard("shard003/mongo-sd003a:27020")
-```
-```
 $ sh.addShard("shard003/mongo-sd003b:27020")
+$ sh.addShard("shard003/mongo-sd003c:27020")
+```
+```
+$ sh.addShard("shard004/mongo-sd004a:27021")
+$ sh.addShard("shard004/mongo-sd004b:27021")
+$ sh.addShard("shard004/mongo-sd004c:27021")
 ```
 
 para conferir
@@ -201,106 +225,5 @@ nossos Shards Criados
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/b1007c5e-eb40-40c9-8a2d-ff0626cd6ec4)
 
 
-__________________________________________________________
 
-
-fazer relatorio nesse padrão
-
-# Título do projeto
-
-Um parágrafo da descrição do projeto vai aqui
-
-## 🚀 Começando
-
-Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
-
-Consulte **[Implantação](#-implanta%C3%A7%C3%A3o)** para saber como implantar o projeto.
-
-### 📋 Pré-requisitos
-
-De que coisas você precisa para instalar o software e como instalá-lo?
-
-```
-Dar exemplos
-```
-
-### 🔧 Instalação
-
-Uma série de exemplos passo-a-passo que informam o que você deve executar para ter um ambiente de desenvolvimento em execução.
-
-Diga como essa etapa será:
-
-```
-Dar exemplos
-```
-
-E repita:
-
-```
-Até finalizar
-```
-
-Termine com um exemplo de como obter dados do sistema ou como usá-los para uma pequena demonstração.
-
-## ⚙️ Executando os testes
-
-Explicar como executar os testes automatizados para este sistema.
-
-### 🔩 Analise os testes de ponta a ponta
-
-Explique que eles verificam esses testes e porquê.
-
-```
-Dar exemplos
-```
-
-### ⌨️ E testes de estilo de codificação
-
-Explique que eles verificam esses testes e porquê.
-
-```
-Dar exemplos
-```
-
-## 📦 Implantação
-
-Adicione notas adicionais sobre como implantar isso em um sistema ativo
-
-## 🛠️ Construído com
-
-Mencione as ferramentas que você usou para criar seu projeto
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - O framework web usado
-* [Maven](https://maven.apache.org/) - Gerente de Dependência
-* [ROME](https://rometools.github.io/rome/) - Usada para gerar RSS
-
-## 🖇️ Colaborando
-
-Por favor, leia o [COLABORACAO.md](https://gist.github.com/usuario/linkParaInfoSobreContribuicoes) para obter detalhes sobre o nosso código de conduta e o processo para nos enviar pedidos de solicitação.
-
-## 📌 Versão
-
-Nós usamos [SemVer](http://semver.org/) para controle de versão. Para as versões disponíveis, observe as [tags neste repositório](https://github.com/suas/tags/do/projeto). 
-
-## ✒️ Autores
-
-Mencione todos aqueles que ajudaram a levantar o projeto desde o seu início
-
-* **Um desenvolvedor** - *Trabalho Inicial* - [umdesenvolvedor](https://github.com/linkParaPerfil)
-* **Fulano De Tal** - *Documentação* - [fulanodetal](https://github.com/linkParaPerfil)
-
-Você também pode ver a lista de todos os [colaboradores](https://github.com/usuario/projeto/colaboradores) que participaram deste projeto.
-
-## 📄 Licença
-
-Este projeto está sob a licença (sua licença) - veja o arquivo [LICENSE.md](https://github.com/usuario/projeto/licenca) para detalhes.
-
-## 🎁 Expressões de gratidão
-
-* Conte a outras pessoas sobre este projeto 📢;
-* Convide alguém da equipe para uma cerveja 🍺;
-* Um agradecimento publicamente 🫂;
-* etc.
-
-
----
+# 📦 Montando a Aplicação e os bancos
