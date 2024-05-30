@@ -411,3 +411,24 @@ for filial in filiais:
     print(f"Estoque calculado para {filial}: {stock}")
 ```
 
+
+# 📦 Monitorando e extraindo métricas
+
+para extrai metricas do nosso banco de dados, vamos usar o Grafana com prometheus
+
+instalando o prometheus
+```
+docker run -d --name prometheus --network prometheus-net -p 9090:9090 prom/prometheus
+```
+
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/18663e0c-7b64-46ef-914e-85082ab1ecf4)
+
+
+para executar o grafana em um container no docker, vamos usar o seguinte comando
+
+
+```
+docker run -d --name=grafana -p 3000:3000 grafana/grafana
+```
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/ba7878a6-4e1f-40f0-bf8f-bd4b8e42277d)
+
