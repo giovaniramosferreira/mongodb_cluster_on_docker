@@ -256,7 +256,7 @@ Essencialmente, o script automatiza o controle de estoque, garantindo que as ope
 
 o Script:
 
----
+```
 from pymongo import MongoClient
 from datetime import datetime
 from faker import Faker
@@ -391,5 +391,5 @@ for filial in filiais:
 
     stock = calculate_stock(movimentacao_collection)  # Calcular estoque
     print(f"Estoque calculado para {filial}: {stock}")
----
+```
 
