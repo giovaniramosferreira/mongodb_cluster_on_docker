@@ -13,6 +13,8 @@ Cada filial possui um grande volume de produtos em seu estoque. O sistema precis
 ## [Arquitetura da Solução]
 Baseando-se no artigo [artigo](https://gustavo-leitao.medium.com/criando-um-cluster-mongodb-com-replicaset-e-sharding-com-docker-9cb19d456b56) de Gustavo Leitão, vamos criar um cluster de MongoDB em Docker. Para isso, utilizaremos três tipos de serviços: Roteador, Servidor de Configuração e Shards, que serão responsáveis pelas partições.
 
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/57086f13-4918-478e-87b4-9a6b0afe37a6)
+
 
 No caso do nosso cliente já existem 4 filiais
 
@@ -26,7 +28,7 @@ Todos os comandos abaixo devem ser executados diretamente no prompt do comando d
 $ docker network create supermercados-gigios
 ```
 
-#Criando os ConfigServers
+## Criando os ConfigServers
 ```
 $ docker run --name m-c01 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
 ```
@@ -36,7 +38,10 @@ $ docker run --name m-c02 --net supermercados-gigios -d mongo mongod --configsvr
 ```
 $ docker run --name m-c03 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
 ```
-#Configurando os ConfigServers
+```
+$ docker run --name m-c04 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
+```
+## Configurando os ConfigServers
 
 ```
 $ docker exec -it m-c01 mongosh
@@ -51,7 +56,8 @@ rs.initiate(
       members: [
          { _id: 0, host : "m-c01:27017" },
          { _id: 1, host : "m-c02:27017" },
-         { _id: 2, host : "m-c03:27017" }
+         { _id: 2, host : "m-c03:27017" },
+         { _id: 3, host : "m-c04:27017" }
       ]
    }
 )
@@ -59,23 +65,30 @@ rs.initiate(
 
 ## Criando os Shards
 
+shard001
+
 ```
 $ docker run --name mongo-sd001a --net supermercados-gigios -d mongo mongod --port 27018 --shardsvr --replSet shard001
-```
-```
 $ docker run --name mongo-sd001b --net supermercados-gigios -d mongo mongod --port 27018 --shardsvr --replSet shard001
+$ docker run --name mongo-sd001c --net supermercados-gigios -d mongo mongod --port 27018 --shardsvr --replSet shard001
 ```
+shard002
 ```
 $ docker run --name mongo-sd002a --net supermercados-gigios -d mongo mongod --port 27019 --shardsvr --replSet shard002
-```
-```
 $ docker run --name mongo-sd002b --net supermercados-gigios -d mongo mongod --port 27019 --shardsvr --replSet shard002
+$ docker run --name mongo-sd002c --net supermercados-gigios -d mongo mongod --port 27019 --shardsvr --replSet shard002
 ```
+shard003
 ```
 $ docker run --name mongo-sd003a --net supermercados-gigios -d mongo mongod --port 27020 --shardsvr --replSet shard003
-```
-```
 $ docker run --name mongo-sd003b --net supermercados-gigios -d mongo mongod --port 27020 --shardsvr --replSet shard003
+$ docker run --name mongo-sd003c --net supermercados-gigios -d mongo mongod --port 27020 --shardsvr --replSet shard003
+```
+shard004
+```
+$ docker run --name mongo-sd004a --net supermercados-gigios -d mongo mongod --port 27021 --shardsvr --replSet shard004
+$ docker run --name mongo-sd004b --net supermercados-gigios -d mongo mongod --port 27021 --shardsvr --replSet shard004
+$ docker run --name mongo-sd004c --net supermercados-gigios -d mongo mongod --port 27021 --shardsvr --replSet shard004
 ```
 
 ## configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
