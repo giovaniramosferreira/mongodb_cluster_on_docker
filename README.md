@@ -254,6 +254,24 @@ Com tudo configurado, chegou a hora de criarmos a aplicação que vai realizar o
 
 Essencialmente, o script automatiza o controle de estoque, garantindo que as operações de entrada e saida sejam registradas corretamente e refletidas no estoque disponível em cada filial.
 
+Os campos inseridos em nossas transações são esses:
+        '_id'
+        'item_id'
+        'data_operacao'
+        'quantidade'
+        'tipo_operacao'
+        'preco_unitario'
+        'valor_total'
+        'fornecedor'
+        'codigo_fornecedor'
+        'codigo_categoria'
+        'nome_categoria'
+        'marca'
+        'codigo_local'
+        'nome_local'
+        'data_validade'
+        'lote'
+
 o Script:
 
 ```
