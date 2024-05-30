@@ -132,8 +132,6 @@ rs.initiate(
 )
 ```
 
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/666e1536-28ec-4014-97dd-706a03921762)
-
 ```
 docker exec -it mongo-sd002a mongosh --port 27019
 ```
@@ -150,7 +148,6 @@ rs.initiate(
    }
 )
 ```
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/5120ef50-6d91-4222-93b7-bbfe0e8111b9)
 
 ```
 docker exec -it mongo-sd003a mongosh --port 27020
@@ -168,7 +165,6 @@ rs.initiate(
    }
 )
 ```
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/056387b9-fca9-448b-8546-960fd18c298f)
 
 ```
 docker exec -it mongo-sd004a mongosh --port 27021
@@ -192,8 +188,6 @@ rs.initiate(
 ```
 docker run -p 27017:27017 --name mongo-rt --net supermercados-gigios -d mongo mongos --port 27017 --configdb configserver/m-c01:27017,m-c02:27017,m-c03:27017,m-c04:27017 --bind_ip_all
 ```
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/4f82339b-44e8-4551-bb47-bf5fc67a649c)
-
 
 checando se tudo está ok
 
@@ -201,7 +195,10 @@ checando se tudo está ok
 ```
 docker ps
 ```
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/ce12e52c-d53d-4ac6-9748-4a77135d1af5)
+
+se tudo estiver certo, veremos a seguinte tela
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/82cd1486-be87-44ed-bdd1-12eb3638c249)
+
 
 
 ## 🔧 Configurando o roteador - execute cada linha separadamente.
