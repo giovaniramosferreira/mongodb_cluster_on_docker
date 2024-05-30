@@ -30,6 +30,10 @@ Todos os comandos abaixo devem ser executados diretamente no prompt do comando d
 $ docker network create supermercados-gigios
 ```
 
+Para deletar uma rede Criada, utilize o comando
+```
+$ docker network rm supermercados-gigios
+```
 ## 🔧 Criando os ConfigServers
 ```
 $ docker run --name m-c01 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
