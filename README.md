@@ -414,21 +414,9 @@ for filial in filiais:
 
 # 📦 Monitorando e extraindo métricas
 
-para extrai metricas do nosso banco de dados, vamos usar o Grafana com prometheus
+Para extrair metricas, vamos utilizar a extensão do docker chamada [ContainerWath](https://hub.docker.com/extensions/containerwatch/containerwatch#!)
 
-instalando o prometheus
-```
-docker run -d --name prometheus --network prometheus-net -p 9090:9090 prom/prometheus
-```
+Para instalar, vamos nas estensões do Docker e instalar. simples assim.
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/9489be50-8b7e-4dc7-81e4-e1ad4b355295)
 
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/18663e0c-7b64-46ef-914e-85082ab1ecf4)
-
-
-para executar o grafana em um container no docker, vamos usar o seguinte comando
-
-
-```
-docker run -d --name=grafana -p 3000:3000 grafana/grafana
-```
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/ba7878a6-4e1f-40f0-bf8f-bd4b8e42277d)
 
