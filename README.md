@@ -18,6 +18,17 @@ Baseando-se no artigo [artigo](https://gustavo-leitao.medium.com/criando-um-clus
 
 No caso do nosso cliente já existem 4 filiais
 
+## [Justificativa da Solução]
+
+Escolhemos a arquitetura acima pois ela permite o particionamento dos dados e a replicação dos servidores para garantir a disponibilidade do serviço mesmo que um dos nós fique inacessivel (mostraremos no video dos testes). Como se trata de um banco de dados que vai registrar milhoes de transações, ele precisa ser eficientemente rápido e disponivel.
+
+### Escalabilidade:
+No nosso cluster, os dados são distribuídos em shards, cada um contendo um subconjunto dos dados. O particionamento horizontal divide a coleção em múltiplos shards com base em uma chave de shard que definiremos na construção, garantindo que cada shard contenha um conjunto distinto de documentos.
+
+O particionamento horizontal facilita a adição de novos shards ao cluster, permitindo que o sistema escale horizontalmente. Com o aumento da quantidade de filiais e da carga de trabalho, novos shards vão ser adicionados para distribuir a carga de forma eficiente.
+
+### Desempenho:
+A ferramenta escolhida é o MongoDB, banco de dados robusto e eficiente, capaz de suportar nossa aplicação tranquiolamete. O desempenho do MongoDB pode ser excepcional quando bem configurado e otimizado de acordo com os padrões de uso e os requisitos específicos do sistema. A escolha de uma estratégia de particionamento adequada, a criação de índices eficientes, a configuração correta de memória, e o uso de replicação e sharding serão a cereja do bolo para aproveitar ao máximo o potencial de desempenho do MongoDB.
 _______
 
 ## [Construindo a Solução]
@@ -297,6 +308,11 @@ sh.shardCollection("filial_004.movimentacao", {"id": "hashed"})
 
 
 Dessa forma, agora temos uma distribuição igualitaria utilizando o campo 'id' como Shardkey. Estamos prontos para testar o funcionamento
+
+# 📦 Quando houver o acrescimo de novas filiais
+
+Sempre que houver o acrescimo de novas filiais, vamos criar um novo Shard com 3 replicasets e mais um config server, utilizando os mesmos comandos utilizados acima, sem esquecer de acrecentar a nova filial na nova shard criada.
+
 
 # 📦 Montando a Aplicação e os bancos
 
