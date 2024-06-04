@@ -11,13 +11,7 @@ PORT = 27017          # Porta padrão do MongoDB
 filiais = ['filial_001', 
            'filial_002', 
            'filial_003', 
-           'filial_004',
-           'filial_005', 
-           'filial_006', 
-           'filial_007', 
-           'filial_008',
-           'filial_009', 
-           'filial_010'
+           'filial_004'
            ]
 
 # Função para conectar ao MongoDB
@@ -84,6 +78,7 @@ def insert_order_documents(movimentacao_collection, estoque_collection):
 
     order = {
         '_id': order_id,  # ID sequencial
+        'id' :random.randint(0, 999999999), # campo shardeado hashkey 
         'item_id': item_id,  
         'data_operacao': datetime.now(),  
         'quantidade': quantidade,  
@@ -119,7 +114,7 @@ def insert_order_documents(movimentacao_collection, estoque_collection):
 # Conectar ao MongoDB
 client = connect_to_mongodb(HOST, PORT)
 
-numero_operacoes = 500  # Número de documentos a serem inseridos por filial
+numero_operacoes = 1000  # Número de documentos a serem inseridos por filial
 
 # Loop para processar cada filial
 for filial in filiais: 
