@@ -31,11 +31,11 @@ O particionamento horizontal facilita a adição de novos shards ao cluster, per
 A ferramenta escolhida é o MongoDB, banco de dados robusto e eficiente, capaz de suportar nossa aplicação tranquiolamete. O desempenho do MongoDB pode ser excepcional quando bem configurado e otimizado de acordo com os padrões de uso e os requisitos específicos do sistema. A escolha de uma estratégia de particionamento adequada, a criação de índices eficientes, a configuração correta de memória, e o uso de replicação e sharding serão a cereja do bolo para aproveitar ao máximo o potencial de desempenho do MongoDB.
 _______
 
-## [Construindo a Solução]
+# 🔧 Construindo a Solução
 
 Todos os comandos abaixo devem ser executados diretamente no prompt do comando do seu computador. no meu caso, estou usando Windows
 
-## 🔧 Criando a Rede
+### 🔧 Criando a Rede
 
 ```
 docker network create supermercados-gigios
@@ -45,7 +45,7 @@ Para deletar uma rede Criada, utilize o comando
 ```
 docker network rm supermercados-gigios
 ```
-## 🔧 Criando os ConfigServers
+### 🔧 Criando os ConfigServers
 ```
 docker run --name m-c01 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
 ```
@@ -58,7 +58,7 @@ docker run --name m-c03 --net supermercados-gigios -d mongo mongod --configsvr -
 ```
 docker run --name m-c04 --net supermercados-gigios -d mongo mongod --configsvr --replSet configserver --port 27017
 ```
-## 🔧 Configurando os ConfigServers
+### 🔧 Configurando os ConfigServers
 
 ```
 docker exec -it m-c01 mongosh
@@ -80,7 +80,7 @@ rs.initiate(
 )
 ```
 
-## 🔧 Criando os Shards
+### 🔧 Criando os Shards
 
 shard001
 
@@ -124,7 +124,7 @@ docker run --name mongo-sd004b --net supermercados-gigios -d mongo mongod --port
 docker run --name mongo-sd004c --net supermercados-gigios -d mongo mongod --port 27021 --shardsvr --replSet shard004
 ```
 
-## 🔧 Configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
+### 🔧 Configurando os shards - procedimento precisa ser feito para todos os shards individualmente.
 
 ```
 docker exec -it mongo-sd001a mongosh --port 27018
@@ -194,7 +194,7 @@ rs.initiate(
 )
 ```
 
-## 🔧 Criando o Roteador
+### 🔧 Criando o Roteador
 
 ```
 docker run -p 27017:27017 --name mongo-rt --net supermercados-gigios -d mongo mongos --port 27017 --configdb configserver/m-c01:27017,m-c02:27017,m-c03:27017,m-c04:27017 --bind_ip_all
@@ -212,7 +212,7 @@ se tudo estiver certo, veremos a seguinte tela
 
 
 
-## 🔧 Configurando o roteador - execute cada linha separadamente.
+### 🔧 Configurando o roteador - execute cada linha separadamente.
 
 ```
 docker exec -it mongo-rt mongosh
@@ -246,7 +246,6 @@ sh.status()
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/20304f8e-3345-453c-a399-be2121430fee)
 
 
-
 Após a criação do cluster, podemos utilizar o MongoDB Compass para acessar o ambiente. é interessante observar as coleções do database Config:
 
 nossos Shards Criados
@@ -254,11 +253,11 @@ nossos Shards Criados
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/33aa0f1f-297a-4036-af60-9063a807b287)
 
 
-## 🔧 Configurando as Shardkeys para cada Filial
+### 🔧 Configurando as Shardkeys para cada Filial
 
 Para configurar as Sharkeys para cada uma das filiais, vamos primeiramente criar os bancos de dados e as collections para cada uma. para isso vou usar o mongosh na parte inferior do MongoDB Compass
 
-### Filial_001
+Filial_001
 
 ```
 use filial_001
@@ -270,7 +269,7 @@ db.movimentacao.createIndex({"id": "hashed"})
 sh.shardCollection("filial_001.movimentacao", {"id": "hashed"})
 ```
 
-### Filial_002
+Filial_002
 
 ```
 use filial_002
@@ -282,7 +281,7 @@ db.movimentacao.createIndex({"id": "hashed"})
 sh.shardCollection("filial_002.movimentacao", {"id": "hashed"})
 ```
 
-### Filial_003
+Filial_003
 
 ```
 use filial_003
@@ -294,7 +293,7 @@ db.movimentacao.createIndex({"id": "hashed"})
 sh.shardCollection("filial_003.movimentacao", {"id": "hashed"})
 ```
 
-### Filial_004
+Filial_004
 
 ```
 use filial_004
@@ -309,12 +308,12 @@ sh.shardCollection("filial_004.movimentacao", {"id": "hashed"})
 
 Dessa forma, agora temos uma distribuição igualitaria utilizando o campo 'id' como Shardkey. Estamos prontos para testar o funcionamento
 
-# 📦 Quando houver o acrescimo de novas filiais
+# 🏪 Quando houver o acrescimo de novas filiais
 
 Sempre que houver o acrescimo de novas filiais, vamos criar um novo Shard com 3 replicasets e mais um config server, utilizando os mesmos comandos utilizados acima, sem esquecer de acrecentar a nova filial na nova shard criada.
 
 
-# 📦 Montando a Aplicação e os bancos
+# 🖥️ Montando a Aplicação
 
 Com tudo configurado, chegou a hora de criarmos a aplicação que vai realizar operações em nosso banco de dados. para isso, criei um script Python que faz:
 
@@ -482,7 +481,7 @@ for filial in filiais:
 ```
 
 
-# 📦 Monitorando e extraindo métricas
+# ✅ Monitorando e extraindo métricas
 
 Para extrair as metricas das operações no banco, vamos utilizar a guia Performace do MongoDB Compass
 
@@ -499,7 +498,12 @@ Para extrair métricas dos containers, vamos utilizar a extensão do docker cham
 
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/92289303-7d8a-4338-aaf5-c34a4b3d4374)
 
-
 # Video dos testes:
 
 https://www.youtube.com/watch?v=5ZMxRspy8Gw
+
+# ✅ Conclusão
+
+Neste projeto, demonstramos a criação de um cluster MongoDB utilizando containers no Docker, focado em atender às necessidades de escalabilidade e eficiência de uma cadeia de supermercados em expansão. Com uma arquitetura robusta que envolve roteadores, servidores de configuração e shards, garantimos a distribuição de dados e a replicação para alta disponibilidade. A implementação foi validada com um script Python para operações de estoque e monitorada com ferramentas como MongoDB Compass e ContainerWatch, mostrando resultados eficientes e prontos para suportar grandes volumes de dados e transações.
+
+🚀🚀🚀🚀🚀
