@@ -486,6 +486,4 @@ Para extrair métricas dos containers, vamos utilizar a extensão do docker cham
 
 # Video dos testes:
 
-
-[![Video]([https://www.youtube.com/watch?v=5ZMxRspy8Gw])
-
+https://www.youtube.com/watch?v=5ZMxRspy8Gw
