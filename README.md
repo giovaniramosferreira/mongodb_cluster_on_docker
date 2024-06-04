@@ -1,14 +1,14 @@
 # Criando um Cluster MongoDB utilizando conteiners no Docker
 
-Nesse projeto vou exemplicar um projeto de implantação de um banco de dados documental escalável e distribuido, com o objetivo de aplicar os conhecimentos adquiridos nas aulas de Banco de Dados NoSQL do curso de Engenharia de Dados da PUC Minas, ministrado pelo (excelente) professor [Anderson Theobaldo](https://www.linkedin.com/in/atheobaldo/)
+Neste projeto, apresentarei a implementação de um banco de dados documental escalável e distribuído. O objetivo é aplicar os conhecimentos adquiridos nas aulas de Banco de Dados NoSQL do curso de Engenharia de Dados da PUC Minas, ministrado pelo excelente professor [Anderson Theobaldo](https://www.linkedin.com/in/atheobaldo/)
 
 # 🚀 Começando
 
 ## [Cenário]
 
-Vamos criar um cluster para atender às necessidades de uma cadeia de supermercados, com foco em escalabilidade e eficiência. Nosso cliente planeja expandir para novas cidades em breve, aumentando rapidamente o número de filiais.
+Vamos criar um cluster para atender às necessidades de uma cadeia de supermercados, focando em escalabilidade e eficiência. Nosso cliente planeja expandir rapidamente para novas cidades, aumentando o número de filiais.
 
-Cada filial possui um grande volume de produtos em seu estoque. O sistema precisa ser capaz de lidar com milhões de registros de produtos, garantindo que as consultas de estoque e as atualizações de inventário sejam rápidas e eficientes. A escalabilidade do sistema é essencial, pois nosso cliente tem planos de expansão e vai abrir novas filiais em um futuro breve.
+Cada filial possui um grande volume de produtos em seu estoque. O sistema precisa ser capaz de lidar com milhões de registros de produtos, garantindo que consultas de estoque e atualizações de inventário sejam rápidas e eficientes. A escalabilidade do sistema é crucial, pois a expansão da rede de filiais está prevista para um futuro próximo.
 
 ## [Arquitetura da Solução]
 Baseando-se no artigo [artigo](https://gustavo-leitao.medium.com/criando-um-cluster-mongodb-com-replicaset-e-sharding-com-docker-9cb19d456b56) de Gustavo Leitão, vamos criar um cluster de MongoDB em Docker. Para isso, utilizaremos três tipos de serviços: Roteador, Servidor de Configuração e Shards, que serão responsáveis pelas partições.
@@ -29,6 +29,11 @@ O particionamento horizontal facilita a adição de novos shards ao cluster, per
 
 ### Desempenho:
 A ferramenta escolhida é o MongoDB, banco de dados robusto e eficiente, capaz de suportar nossa aplicação tranquiolamete. O desempenho do MongoDB pode ser excepcional quando bem configurado e otimizado de acordo com os padrões de uso e os requisitos específicos do sistema. A escolha de uma estratégia de particionamento adequada, a criação de índices eficientes, a configuração correta de memória, e o uso de replicação e sharding serão a cereja do bolo para aproveitar ao máximo o potencial de desempenho do MongoDB.
+
+### Teorema de CAP
+Para este projeto, a escolha foi priorizar Disponibilidade (A) e Tolerância a Particionamento (P), permitindo que o sistema esteja sempre disponível e continue funcionando durante falhas de rede. A consistência pode ser eventual, o que significa que, embora os dados possam não ser instantaneamente consistentes após uma atualização, eles se tornarão consistentes em um curto período de tempo.
+
+Essa abordagem garante que o sistema possa lidar com o grande volume de registros e operações em múltiplas filiais, mantendo a operação contínua mesmo em caso de falhas de comunicação entre os nós do cluster.
 _______
 
 # 🔧 Construindo a Solução
@@ -483,13 +488,25 @@ for filial in filiais:
 
 # ✅ Monitorando e extraindo métricas
 
+Como podemos ver nas imagens abaixo, os Shards foram bem implementados na collection de movimentações. temos 4 shards onde cada um ficou com aproximadamente 25% da carga:
+
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/bf74f01e-80c4-4507-aa05-aa4d13aaed53)
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/56c65e04-985c-4fb6-bdaf-19a1348a510e)
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/2bfe319f-f19b-4d1e-a3e4-d2a4edb65ba5)
+
+
+
+
 Para extrair as metricas das operações no banco, vamos utilizar a guia Performace do MongoDB Compass
 
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/4acd83a9-6af9-4c1f-9fad-b58066c2276e)
 
 Como podemos ver no Gráfico acima, temos a cada segundo:
+
 9 Operações de INSERT
+
 15 Operações de CONSUTA
+
 9 Operações de UPDATE
 
 fazendo uma cronometragem, temos a inserção de 100 movimentações em 10 segundos, o que é bastante eficiente dado o cenário de nosso cliente. isso representa 864.000 operações por dia.
