@@ -236,12 +236,64 @@ sh.status()
 
 
 
-Após a criação do cluster, podemo utilizar o MongoCompass para acessar o ambiente. é interessante observar as coleções do database Config:
+Após a criação do cluster, podemos utilizar o MongoDB Compass para acessar o ambiente. é interessante observar as coleções do database Config:
 
 nossos Shards Criados
 
 ![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/33aa0f1f-297a-4036-af60-9063a807b287)
 
+
+## 🔧 Configurando as Shardkeys para cada Filial
+
+Para configurar as Sharkeys para cada uma das filiais, vamos primeiramente criar os bancos de dados e as collections para cada uma. para isso vou usar o mongosh na parte inferior do MongoDB Compass
+
+### Filial_001
+
+```
+use filial_001
+```
+```
+db.movimentacao.createIndex({"id": "hashed"})
+```
+```
+sh.shardCollection("filial_001.movimentacao", {"id": "hashed"})
+```
+
+### Filial_002
+
+```
+use filial_002
+```
+```
+db.movimentacao.createIndex({"id": "hashed"})
+```
+```
+sh.shardCollection("filial_002.movimentacao", {"id": "hashed"})
+```
+
+### Filial_003
+
+```
+use filial_003
+```
+```
+db.movimentacao.createIndex({"id": "hashed"})
+```
+```
+sh.shardCollection("filial_003.movimentacao", {"id": "hashed"})
+```
+
+### Filial_004
+
+```
+use filial_004
+```
+```
+db.movimentacao.createIndex({"id": "hashed"})
+```
+```
+sh.shardCollection("filial_004.movimentacao", {"id": "hashed"})
+```
 
 # 📦 Montando a Aplicação e os bancos
 
