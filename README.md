@@ -295,19 +295,26 @@ db.movimentacao.createIndex({"id": "hashed"})
 sh.shardCollection("filial_004.movimentacao", {"id": "hashed"})
 ```
 
+
+Dessa forma, agora temos uma distribuição igualitaria utilizando o campo 'id' como Shardkey. Estamos prontos para testar o funcionamento
+
 # 📦 Montando a Aplicação e os bancos
 
 Com tudo configurado, chegou a hora de criarmos a aplicação que vai realizar operações em nosso banco de dados. para isso, criei um script Python que faz:
 
 1 - Conexão ao Banco de Dados: Conecta-se ao banco de dados MongoDB onde os dados de estoque são armazenados.
+
 2 - Geração de Pedidos: Gera movimentaçoes de entrada e saída de produtos para cada filial.
+
 3 - Atualização do Estoque: Registra os pedidos no sistema e atualiza automaticamente o estoque disponível.
+
 4 - Cálculo do Estoque Atual: Calcula o estoque atualizado após a execução dos pedidos para cada filial.
 
 Essencialmente, o script automatiza o controle de estoque, garantindo que as operações de entrada e saida sejam registradas corretamente e refletidas no estoque disponível em cada filial.
 
 Os campos inseridos em nossas transações são esses:
         '_id'
+        'id'
         'item_id'
         'data_operacao'
         'quantidade'
@@ -340,13 +347,7 @@ PORT = 27017          # Porta padrão do MongoDB
 filiais = ['filial_001', 
            'filial_002', 
            'filial_003', 
-           'filial_004',
-           'filial_005', 
-           'filial_006', 
-           'filial_007', 
-           'filial_008',
-           'filial_009', 
-           'filial_010'
+           'filial_004'
            ]
 
 # Função para conectar ao MongoDB
@@ -413,6 +414,7 @@ def insert_order_documents(movimentacao_collection, estoque_collection):
 
     order = {
         '_id': order_id,  # ID sequencial
+        'id' :random.randint(0, 999999999), # campo shardeado hashkey 
         'item_id': item_id,  
         'data_operacao': datetime.now(),  
         'quantidade': quantidade,  
@@ -448,7 +450,7 @@ def insert_order_documents(movimentacao_collection, estoque_collection):
 # Conectar ao MongoDB
 client = connect_to_mongodb(HOST, PORT)
 
-numero_operacoes = 500  # Número de documentos a serem inseridos por filial
+numero_operacoes = 100  # Número de documentos a serem inseridos por filial
 
 # Loop para processar cada filial
 for filial in filiais: 
@@ -466,9 +468,24 @@ for filial in filiais:
 
 # 📦 Monitorando e extraindo métricas
 
-Para extrair metricas, vamos utilizar a extensão do docker chamada [ContainerWath](https://hub.docker.com/extensions/containerwatch/containerwatch#!)
+Para extrair as metricas das operações no banco, vamos utilizar a guia Performace do MongoDB Compass
 
-Para instalar, vamos nas estensões do Docker e instalar. simples assim.
-![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/9489be50-8b7e-4dc7-81e4-e1ad4b355295)
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/4acd83a9-6af9-4c1f-9fad-b58066c2276e)
+
+Como podemos ver no Gráfico acima, temos a cada segundo:
+9 Operações de INSERT
+15 Operações de CONSUTA
+9 Operações de UPDATE
+
+fazendo uma cronometragem, temos a inserção de 100 movimentações em 10 segundos, o que é bastante eficiente dado o cenário de nosso cliente. isso representa 864.000 operações por dia.
+
+Para extrair métricas dos containers, vamos utilizar a extensão do docker chamada [ContainerWath](https://hub.docker.com/extensions/containerwatch/containerwatch#!)
+
+![image](https://github.com/giovaniramosferreira/mongodb_cluster_on_docker/assets/62471615/92289303-7d8a-4338-aaf5-c34a4b3d4374)
+
+
+# Video dos testes:
+
+https://youtu.be/5ZMxRspy8Gw
 
 
